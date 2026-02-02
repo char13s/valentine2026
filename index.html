@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Special Question ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fce4ec 0%, #ffebee 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Prevents scrolling if button moves */
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 350px;
+            z-index: 10;
+        }
+        h1 { color: #d63384; font-size: 1.5rem; }
+        .btn-container { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
+        button {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #yesBtn { background: #ff4d6d; color: white; transition: 0.3s; }
+        #yesBtn:hover { transform: scale(1.2); }
+        #noBtn { 
+            background: #adb5bd; 
+            color: white; 
+            position: fixed; /* Keeps it relative to the screen */
+            transition: 0.1s ease;
+            touch-action: none; /* Prevents accidental scrolling on mobile */
+        }
+        .heart {
+            position: absolute;
+            animation: float 4s infinite linear;
+            opacity: 0;
+            user-select: none;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <h1>Will you be my Valentine? ❤️</h1>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="sendEmail()">YES!</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO</button>
+        </div>
+    </div>
+
+    <script>
+        emailjs.init("YOUR_PUBLIC_KEY");
+
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const padding = 50; // Keeps button 50px away from screen edges
+            
+            // Calculate random position within the visible window
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
+            
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+
+        function sendEmail() {
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                message: "She said YES! 🎉"
+            }).then(() => {
+                document.getElementById('mainCard').innerHTML = "<h1>💖 Yay! It's a date! 💖</h1>";
+            });
+        }
+
+        // Heart generator
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }, 300);
+    </script>
+</body>
+</html>
